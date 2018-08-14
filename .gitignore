@@ -59,3 +59,6 @@ Temporary Items
 # virtualenv
 ENV
 ENV370
+
+# test results
+tests/results/

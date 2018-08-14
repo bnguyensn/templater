@@ -4,7 +4,11 @@ import datetime
 from docx import Document
 from openpyxl import load_workbook
 
-wb = load_workbook('invconf_data.xlsx')
+DATA_WB_PATH = 'tests/test_wb.xlsx'
+TEMPLATE_DOC_PATH = 'tests/test_doc.docx'
+RESULT_FOLDER_PATH = 'tests/results'
+
+wb = load_workbook(DATA_WB_PATH)
 ws = wb.active  # Get the first worksheet
 
 
@@ -42,7 +46,7 @@ def repl_func(matched_obj, r_index):
 
 
 for row_index in range(0, ws.max_row - 1):
-    document = Document('invconf_template.docx')
+    document = Document(TEMPLATE_DOC_PATH)
     paragraphs = document.paragraphs
     print('Working on row_index#{}'.format(row_index))
     for para_index, paragraph in enumerate(paragraphs):
@@ -51,22 +55,7 @@ for row_index in range(0, ws.max_row - 1):
             if match:
                 paragraph.text = re.sub(REGEX_PAT, partial(repl_func, r_index=row_index), paragraph.text)
                 print('Replaced match. New paragraph: {}'.format(paragraph.text))
-    document.save('./docx/invconf_#{}.docx'.format(row_index + 1))
+    document.save('{}/res_{}.docx'.format(RESULT_FOLDER_PATH, row_index + 1))
 
-# for i, row in enumerate(dataRows):
-#     if i > 0:
-#         for cell in row:
-#             print('\nrow #{}, column #{}, value = {}'.format(cell.row, cell.column, cell.value))
-
-# Replacing text
-
-# print("\nDocument's paragraphs:")
-# for i, paragraph in enumerate(paragraphs):
-#     if paragraph.text != '':
-#         match = re.findall(rePattern, paragraph.text)
-#         if match:
-#             print('\nFound match at paragraph #{}: {}'.format(i, match))
-#             paragraph.text = re.sub(rePattern, 'REDACTED', paragraph.text)
-#             print('Replaced match. New paragraph: {}'.format(paragraph.text))
 
 print('\nOperations finished with no error :).')
